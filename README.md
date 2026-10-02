@@ -76,3 +76,4 @@ export default defineConfig([
 ])
 
 ```
+Movie/TV series tracker built with React
