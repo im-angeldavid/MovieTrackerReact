@@ -2,6 +2,26 @@
 
 Running log of features. One short entry per feature, newest at the top.
 
+## Search bar (replaces the hero section)
+
+`src/components/Hero.tsx` was deleted and replaced by `src/components/SearchBar.tsx`.
+
+- Controlled `<input type="search">` inside a `<form role="search">` with the
+  magnifying glass from `lucide-react` (`Search` icon), absolutely positioned at
+  `left-5` with `pointer-events-none` so it never blocks typing.
+- Width is `w-full lg:w-1/2`: full width on mobile, exactly 50% from the `lg`
+  breakpoint (64rem) up.
+- Shape is `rounded-full`, not square.
+- Added `[&::-webkit-search-cancel-button]:hidden` to drop the native WebKit
+  clear "x", which otherwise renders as a square glyph inside the round input.
+- Accessible naming via a `sr-only` `<label>` plus `aria-hidden` on the
+  decorative icon.
+- The badge, tagline and CTA buttons from the old hero are gone. Copy is just
+  the heading and one short description of what search does.
+
+Note: the form currently calls `preventDefault()` only — no search endpoint is
+wired up yet, so submitting reloads nothing and does nothing.
+
 ## Popular movies section
 
 Replaces the placeholder feature grid on the landing page.

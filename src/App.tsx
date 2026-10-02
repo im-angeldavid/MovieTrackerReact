@@ -1,5 +1,5 @@
-import Hero from './components/Hero'
 import PopularMovies from './components/PopularMovies'
+import SearchBar from './components/SearchBar'
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
       </header>
 
       <main className="flex-1">
-        <Hero />
+        <SearchBar />
         <PopularMovies />
       </main>
 
