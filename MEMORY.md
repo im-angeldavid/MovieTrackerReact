@@ -2,6 +2,30 @@
 
 Running log of features. One short entry per feature, newest at the top.
 
+## 404 page
+
+`src/components/NotFoundPage.tsx`, mounted at a wildcard route.
+
+- `App.tsx` is now wrapped in `BrowserRouter` and uses `<Routes>`. The catch-all
+  is `<Route path="*" element={<NotFoundPage />} />`, which matches any URL that
+  no other route claims.
+- "Back to home" is a react-router `<Link to="/">` for client-side navigation, so
+  it does not trigger a full page reload. The header brand link was converted to
+  a `<Link>` for the same reason.
+- The header "Popular" link stays a plain `<a href="/#popular">` because it is a
+  hash on the same page, not a route change.
+- `Compass` icon from `lucide-react`, decorative so it carries `aria-hidden`.
+- Layout follows the mobile-first rule: centred single column, padding grows
+  from `py-16` to `sm:py-24`.
+
+### Notes
+
+- Deep links return HTTP 200 in dev and in `vite preview` because the SPA
+  fallback serves `index.html` for every path. A real 404 status needs a host
+  rewrite, which Vite's preview does not do.
+- The package is `react-router@8`; import from `react-router`, not
+  `react-router-dom`.
+
 ## Search bar (replaces the hero section)
 
 `src/components/Hero.tsx` was deleted and replaced by `src/components/SearchBar.tsx`.
