@@ -1,9 +1,10 @@
 import { BrowserRouter, Link, Route, Routes } from 'react-router'
+import { Home } from 'lucide-react'
 import NotFoundPage from './components/NotFoundPage'
 import PopularMovies from './components/PopularMovies'
 import SearchBar from './components/SearchBar'
 
-function Home() {
+function HomePage() {
   return (
     <>
       <SearchBar />
@@ -17,19 +18,20 @@ function App() {
     <BrowserRouter>
       <div className="flex min-h-screen flex-col bg-zinc-950 text-zinc-100">
         <header className="border-b border-zinc-900">
-          <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-            <Link to="/" className="text-sm font-semibold tracking-tight">
-              MovieTracker
+          <nav className="mx-auto flex max-w-7xl items-center px-4 py-4">
+            <Link
+              to="/"
+              aria-label="Home"
+              className="text-zinc-400 transition hover:text-zinc-100"
+            >
+              <Home className="size-5" />
             </Link>
-            <a href="/#popular" className="text-sm text-zinc-400 hover:text-zinc-100">
-              Popular
-            </a>
           </nav>
         </header>
 
         <main className="flex-1">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
