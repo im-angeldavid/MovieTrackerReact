@@ -2,6 +2,7 @@ import { BrowserRouter, Link, Route, Routes } from 'react-router'
 import { Home } from 'lucide-react'
 import NotFoundPage from './components/NotFoundPage'
 import PopularMovies from './components/PopularMovies'
+import PopularShows from './components/PopularShows'
 import SearchBar from './components/SearchBar'
 
 function HomePage() {
@@ -9,6 +10,7 @@ function HomePage() {
     <>
       <SearchBar />
       <PopularMovies />
+      <PopularShows />
     </>
   )
 }

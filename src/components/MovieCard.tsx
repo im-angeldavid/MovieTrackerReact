@@ -8,6 +8,7 @@ type MovieCardProps = {
 function MovieCard({ movie }: MovieCardProps) {
   const poster = posterUrl(movie.poster_path)
   const year = releaseYear(movie)
+  const title = movie.title ?? (movie as TmdbMovie & { name?: string }).name ?? 'Untitled'
 
   return (
     <article className="group">
@@ -15,7 +16,7 @@ function MovieCard({ movie }: MovieCardProps) {
         {poster ? (
           <img
             src={poster}
-            alt={`${movie.title} poster`}
+            alt={`${title} poster`}
             width={342}
             height={513}
             loading="lazy"
@@ -29,7 +30,7 @@ function MovieCard({ movie }: MovieCardProps) {
       </div>
 
       <h3 className="mt-2 text-xs leading-snug font-medium text-zinc-200 sm:text-sm">
-        {movie.title}
+        {title}
       </h3>
       {year && <p className="mt-0.5 text-xs text-zinc-500">{year}</p>}
     </article>

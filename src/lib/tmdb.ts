@@ -25,7 +25,7 @@ export function releaseYear(movie: TmdbMovie): string | null {
   return movie.release_date ? movie.release_date.slice(0, 4) : null
 }
 
-export async function fetchPopularMovies(signal?: AbortSignal): Promise<TmdbMovie[]> {
+async function fetchPopular<T>(path: string, signal?: AbortSignal): Promise<T> {
   const token = import.meta.env.VITE_TMDB_ACCESS_TOKEN
 
   if (!token) {
@@ -34,7 +34,7 @@ export async function fetchPopularMovies(signal?: AbortSignal): Promise<TmdbMovi
     )
   }
 
-  const response = await fetch(`${API_BASE_URL}/movie/popular`, {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       accept: 'application/json',
@@ -50,6 +50,15 @@ export async function fetchPopularMovies(signal?: AbortSignal): Promise<TmdbMovi
     )
   }
 
-  const data = (await response.json()) as TmdbPopularResponse
+  return (await response.json()) as T
+}
+
+export async function fetchPopularMovies(signal?: AbortSignal): Promise<TmdbMovie[]> {
+  const data = await fetchPopular<TmdbPopularResponse>('/movie/popular', signal)
+  return data.results
+}
+
+export async function fetchPopularShows(signal?: AbortSignal): Promise<TmdbMovie[]> {
+  const data = await fetchPopular<TmdbPopularResponse>('/tv/popular', signal)
   return data.results
 }
