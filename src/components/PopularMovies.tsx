@@ -53,7 +53,7 @@ function PopularMovies() {
         <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-6">
           {movies.map((movie) => (
             <li key={movie.id}>
-              <MovieCard movie={movie} />
+              <MovieCard item={movie} kind="movie" />
             </li>
           ))}
         </ul>

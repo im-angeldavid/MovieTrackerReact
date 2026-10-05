@@ -3,6 +3,7 @@ import babel from '@rolldown/plugin-babel'
 import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 
+/// <reference types="vitest/config" />
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -10,4 +11,9 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/test/setup.ts'],
+  },
 })
