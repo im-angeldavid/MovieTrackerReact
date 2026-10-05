@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { BrowserRouter, Route, Routes } from 'react-router'
 import SearchBar from './components/SearchBar'
 import PopularMovies from './components/PopularMovies'
@@ -11,6 +12,10 @@ function Home() {
     </>
   )
 }
+=======
+import Hero from './components/Hero'
+import PopularMovies from './components/PopularMovies'
+>>>>>>> parent of 2728ec8 (feat: search bar added. extra details included in AGENTS.md to correct some details related to agents' behaviour)
 
 function App() {
   return (
@@ -27,12 +32,19 @@ function App() {
           </nav>
         </header>
 
+<<<<<<< HEAD
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/:kind/:id" element={<MediaDetailPage />} />
           </Routes>
         </main>
+=======
+      <main className="flex-1">
+        <Hero />
+        <PopularMovies />
+      </main>
+>>>>>>> parent of 2728ec8 (feat: search bar added. extra details included in AGENTS.md to correct some details related to agents' behaviour)
 
         <footer className="border-t border-zinc-900">
           <div className="mx-auto max-w-7xl px-4 py-6 text-xs text-zinc-500">

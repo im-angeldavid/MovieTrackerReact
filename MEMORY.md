@@ -2,6 +2,7 @@
 
 Running log of features. One short entry per feature, newest at the top.
 
+<<<<<<< HEAD
 ## Movie detail pages with dynamic routes
 
 Each card is now a `react-router` `<Link>` to `/{kind}/{id}` (`/movie/969681`,
@@ -69,6 +70,8 @@ inside `@media (hover:hover)`, so it cannot stick on touch devices.
 Note: the form currently calls `preventDefault()` only — no search endpoint is
 wired up yet, so submitting reloads nothing and does nothing.
 
+=======
+>>>>>>> parent of 2728ec8 (feat: search bar added. extra details included in AGENTS.md to correct some details related to agents' behaviour)
 ## Popular movies section
 
 Replaces the placeholder feature grid on the landing page.
