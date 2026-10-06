@@ -10,8 +10,10 @@
 - Use `pnpm run dev` to start the vite server.
 - Every new functional or visual feature must be written in MEMORY.md briefly.
 - MEMORY.md must not exceed 200 lines long.
+- Do not run any script from `package.json` without my permission.
 
 # Coding style guidelines
 - Any react component should not exceed 150 lines.
 - The project must follow a mobile first approach.
 - Always use the `<button>` class from tailwind when creating buttons.
+- Every function in the codebase must have a one-line comment that explains what it does and its behaviour

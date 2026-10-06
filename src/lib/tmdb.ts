@@ -1,31 +1,37 @@
-const API_BASE_URL = 'https://api.themoviedb.org/3'
-const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p'
-const POSTER_SIZE = 'w342'
+const API_BASE_URL = 'https://api.themoviedb.org/3' // TMDB v3 API base URL for all requests.
+const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p' // TMDB image CDN base URL for poster/backdrop paths.
+const POSTER_SIZE = 'w342' // Poster width used for list/card views (mobile-friendly).
 
 export type TmdbMovie = {
-  id: number
-  title: string
-  poster_path: string | null
-  release_date?: string
-  vote_average?: number
+  id: number // TMDB identifier for the movie or TV show.
+  title?: string // Movie title (present for movie results).
+  name?: string // TV show name (present for TV results).
+  poster_path: string | null // Relative poster path or null if unavailable.
+  release_date?: string // Movie release date in YYYY-MM-DD format.
+  first_air_date?: string // TV first air date in YYYY-MM-DD format.
+  vote_average?: number // Average vote score from TMDB.
 }
 
 type TmdbPopularResponse = {
-  page: number
-  results: TmdbMovie[]
-  total_pages: number
-  total_results: number
+  page: number // Current page number from the paginated response.
+  results: TmdbMovie[] // List of movie or TV show results for this page.
+  total_pages: number // Total number of pages available.
+  total_results: number // Total number of results matching the query.
 }
 
+/** Returns the full poster URL for the given TMDB path, or null if no path exists. */
 export function posterUrl(path: string | null): string | null {
   return path ? `${IMAGE_BASE_URL}/${POSTER_SIZE}${path}` : null
 }
 
+/** Extracts the four-digit release/year string from a movie or TV item, preferring release_date then first_air_date; returns null if neither exists. */
 export function releaseYear(movie: TmdbMovie): string | null {
-  return movie.release_date ? movie.release_date.slice(0, 4) : null
+  const date = movie.release_date ?? movie.first_air_date
+  return date ? date.slice(0, 4) : null
 }
 
-async function fetchPopular<T>(path: string, signal?: AbortSignal): Promise<T> {
+/** Generic JSON fetcher against TMDB v3 with bearer auth; throws a descriptive error if the token is missing or the response is not OK. */
+async function fetchJson<T>(path: string, signal?: AbortSignal): Promise<T> {
   const token = import.meta.env.VITE_TMDB_ACCESS_TOKEN
 
   if (!token) {
@@ -53,12 +59,24 @@ async function fetchPopular<T>(path: string, signal?: AbortSignal): Promise<T> {
   return (await response.json()) as T
 }
 
+/** Fetches the current page of popular movies from TMDB; accepts an optional AbortSignal. */
 export async function fetchPopularMovies(signal?: AbortSignal): Promise<TmdbMovie[]> {
-  const data = await fetchPopular<TmdbPopularResponse>('/movie/popular', signal)
+  const data = await fetchJson<TmdbPopularResponse>('/movie/popular', signal)
   return data.results
 }
 
+/** Fetches the current page of popular TV shows from TMDB; accepts an optional AbortSignal. */
 export async function fetchPopularShows(signal?: AbortSignal): Promise<TmdbMovie[]> {
-  const data = await fetchPopular<TmdbPopularResponse>('/tv/popular', signal)
+  const data = await fetchJson<TmdbPopularResponse>('/tv/popular', signal)
   return data.results
+}
+
+/** Fetches a single movie by its TMDB ID, returning the raw TMDB response as unknown. */
+export async function fetchMovieById(id: number, signal?: AbortSignal) {
+  return fetchJson<unknown>(`/movie/${id}`, signal)
+}
+
+/** Fetches a single TV show by its TMDB ID, returning the raw TMDB response as unknown. */
+export async function fetchTvShowById(id: number, signal?: AbortSignal) {
+  return fetchJson<unknown>(`/tv/${id}`, signal)
 }
