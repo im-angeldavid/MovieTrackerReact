@@ -1,5 +1,6 @@
 import { BrowserRouter, Link, Route, Routes } from 'react-router'
 import { Home } from 'lucide-react'
+import MediaDetailsPage from './components/MediaDetailsPage'
 import NotFoundPage from './components/NotFoundPage'
 import PopularMovies from './components/PopularMovies'
 import PopularShows from './components/PopularShows'
@@ -34,6 +35,8 @@ function App() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/movie/:id" element={<MediaDetailsPage kind="movie" />} />
+            <Route path="/tv/:id" element={<MediaDetailsPage kind="tv" />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

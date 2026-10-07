@@ -12,6 +12,17 @@ export type TmdbMovie = {
   vote_average?: number // Average vote score from TMDB.
 }
 
+export type MediaKind = 'movie' | 'tv' // TMDB media type used for routing and detail fetches.
+
+export type TmdbMediaDetails = TmdbMovie & {
+  overview?: string // Short plot summary for the movie or TV show.
+  backdrop_path?: string | null // Relative backdrop image path, or null if unavailable.
+  runtime?: number // Movie runtime in minutes (movies only).
+  number_of_seasons?: number // Total season count (TV shows only).
+  seasons?: unknown[] // Season list (TV shows only); also used to detect the media type.
+  episodes?: unknown[] // Episode list (TV shows only); also used to detect the media type.
+}
+
 type TmdbPopularResponse = {
   page: number // Current page number from the paginated response.
   results: TmdbMovie[] // List of movie or TV show results for this page.
@@ -28,6 +39,13 @@ export function posterUrl(path: string | null): string | null {
 export function releaseYear(movie: TmdbMovie): string | null {
   const date = movie.release_date ?? movie.first_air_date
   return date ? date.slice(0, 4) : null
+}
+
+/** Detects whether a TMDB detail response is a TV show by checking for `seasons`/`episodes` keys, which movie responses never include. */
+export function isTvShow(response: unknown): boolean {
+  if (typeof response !== 'object' || response === null) return false
+  const data = response as Record<string, unknown>
+  return 'seasons' in data || 'episodes' in data
 }
 
 /** Generic JSON fetcher against TMDB v3 with bearer auth; throws a descriptive error if the token is missing or the response is not OK. */
@@ -71,12 +89,21 @@ export async function fetchPopularShows(signal?: AbortSignal): Promise<TmdbMovie
   return data.results
 }
 
-/** Fetches a single movie by its TMDB ID, returning the raw TMDB response as unknown. */
-export async function fetchMovieById(id: number, signal?: AbortSignal) {
-  return fetchJson<unknown>(`/movie/${id}`, signal)
+/** Fetches a single movie by its TMDB ID, returning the parsed detail response. */
+export async function fetchMovieById(id: number, signal?: AbortSignal): Promise<TmdbMediaDetails> {
+  return fetchJson<TmdbMediaDetails>(`/movie/${id}`, signal)
 }
 
-/** Fetches a single TV show by its TMDB ID, returning the raw TMDB response as unknown. */
-export async function fetchTvShowById(id: number, signal?: AbortSignal) {
-  return fetchJson<unknown>(`/tv/${id}`, signal)
+/** Fetches a single TV show by its TMDB ID, returning the parsed detail response. */
+export async function fetchTvShowById(id: number, signal?: AbortSignal): Promise<TmdbMediaDetails> {
+  return fetchJson<TmdbMediaDetails>(`/tv/${id}`, signal)
+}
+
+/** Fetches a movie or TV show detail response for the given kind and TMDB ID. */
+export async function fetchMediaById(
+  kind: MediaKind,
+  id: number,
+  signal?: AbortSignal,
+): Promise<TmdbMediaDetails> {
+  return kind === 'tv' ? fetchTvShowById(id, signal) : fetchMovieById(id, signal)
 }

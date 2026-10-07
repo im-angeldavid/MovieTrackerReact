@@ -1,17 +1,20 @@
+import { Link } from 'react-router'
 import { posterUrl, releaseYear } from '../lib/tmdb'
-import type { TmdbMovie } from '../lib/tmdb'
+import type { MediaKind, TmdbMovie } from '../lib/tmdb'
 
 type MovieCardProps = {
   movie: TmdbMovie
+  kind: MediaKind
 }
 
-function MovieCard({ movie }: MovieCardProps) {
+/** Renders a poster card linked to the item's detail route, built from its media kind and TMDB id. */
+function MovieCard({ movie, kind }: MovieCardProps) {
   const poster = posterUrl(movie.poster_path)
   const year = releaseYear(movie)
-  const title = movie.title ?? (movie as TmdbMovie & { name?: string }).name ?? 'Untitled'
+  const title = movie.title ?? movie.name ?? 'Untitled'
 
   return (
-    <article className="group">
+    <Link to={`/${kind}/${movie.id}`} className="group block">
       <div className="overflow-hidden rounded-lg bg-zinc-900">
         {poster ? (
           <img
@@ -29,11 +32,11 @@ function MovieCard({ movie }: MovieCardProps) {
         )}
       </div>
 
-      <h3 className="mt-2 text-xs leading-snug font-medium text-zinc-200 sm:text-sm">
+      <h3 className="mt-2 text-xs leading-snug font-medium text-zinc-200 group-hover:text-white sm:text-sm">
         {title}
       </h3>
       {year && <p className="mt-0.5 text-xs text-zinc-500">{year}</p>}
-    </article>
+    </Link>
   )
 }
 

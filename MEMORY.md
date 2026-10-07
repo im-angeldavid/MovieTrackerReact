@@ -2,6 +2,45 @@
 
 Running log of features. One short entry per feature, newest at the top.
 
+## Detail routes and id-linked cards
+
+Cards now navigate to a per-item detail page.
+
+- `src/components/MovieCard.tsx` — takes a required `kind: MediaKind` and wraps
+  its content in a react-router `<Link to={`/​${kind}/${movie.id}`}>`, so each
+  card links to its own detail route by media type and id.
+- `PopularMovies` passes `kind="movie"`, `PopularShows` passes `kind="tv"`.
+- `src/lib/tmdb.ts` — added the `MediaKind` type and `fetchMediaById(kind, id,
+  signal)`, which dispatches to the movie or TV detail fetcher.
+- `src/components/MediaDetailsPage.tsx` — reads `:id` via `useParams`, fetches
+  through `fetchMediaById` with an AbortController, and renders `<MediaDetails>`
+  with skeleton and error states; non-numeric ids show an error.
+- `src/App.tsx` — added routes `/movie/:id` and `/tv/:id`, each rendering
+  `<MediaDetailsPage kind="movie" | "tv" />`.
+
+## Media details component
+
+`src/components/MediaDetails.tsx` — presentational component that renders a
+movie or TV show from a TMDB detail response.
+
+- Takes `media: TmdbMediaDetails` as a prop and auto-detects the type with the
+  existing `isTvShow()` helper, so the same component serves both media kinds.
+- Renders a poster, a Movie/TV show badge, the title, year, rating and overview,
+  plus runtime for movies or season count for TV shows.
+- Mobile-first: single column on mobile, `sm:grid-cols-[12rem_1fr]` from `sm` up.
+- `src/lib/tmdb.ts` — added the `TmdbMediaDetails` type (extends `TmdbMovie`)
+  and typed `fetchMovieById()` / `fetchTvShowById()` to return it instead of
+  `unknown`.
+
+## Movie vs TV detection helper
+
+`src/lib/tmdb.ts` — added `isTvShow(response: unknown): boolean`.
+
+- Takes the raw JSON from `fetchMovieById()` / `fetchTvShowById()` (both return
+  `unknown`) and returns `true` when the object contains a `seasons` or
+  `episodes` key, since TMDB movie detail responses never include those.
+- Guards against null/non-object payloads before doing the `in` checks.
+
 ## 404 page
 
 `src/components/NotFoundPage.tsx`, mounted at a wildcard route.
